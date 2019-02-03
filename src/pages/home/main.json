@@ -1,0 +1,6 @@
+{
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 30,
+  "backgroundColor": "#f4ea2a",
+  "navigationBarTitleText": "心意花店"
+}

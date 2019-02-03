@@ -1,0 +1,6 @@
+{
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 120,
+  "backgroundColor": "#f4ea2a",
+  "navigationBarTitleText": "分类"
+}
