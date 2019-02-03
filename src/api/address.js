@@ -29,7 +29,7 @@ export function getAddresses(
   },
   complete = () => {
   }) {
-  urequest({
+  request({
     uri: "/account/addresses",
     method: "get",
     data: {},
