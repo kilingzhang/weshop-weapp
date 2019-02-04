@@ -85,23 +85,19 @@
         store.dispatch("AddCart", cart);
         this.closeQuickAddition();
         toast("success", "添加成功");
-
       },
       /**
        * type 0: 全部显示  1： 购物车  2：立即购买
        */
-      onConfirmQuickAddition(type, details, index, item, nums) {
-        console.log(type, details, index, item, nums);
+      onConfirmQuickAddition(type,cart) {
         if (type === 1) {
-          this.onAddCart(details, index, item, nums);
+          this.onAddCart(cart);
         }
       },
       onCloseQuickAddition(e) {
-        console.log("onClose", e);
         this.closeQuickAddition();
       },
       onCancelQuickAddition(e) {
-        console.log("onCancel", e);
         this.closeQuickAddition();
       },
       closeQuickAddition() {

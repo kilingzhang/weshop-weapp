@@ -53,7 +53,6 @@
       },
       iconClickItem() {
         this.$emit("icon-click", this.item);
-        console.log("iconClickItem");
       }
     },
     created() {

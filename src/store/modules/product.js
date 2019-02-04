@@ -195,7 +195,6 @@ const actions = {
     var complete = payload["complete"];
 
     if (state.pinterestResult === null) {
-      console.log("pinterestResult === null");
       if (complete) {
         complete();
       }

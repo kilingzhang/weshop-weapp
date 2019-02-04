@@ -111,7 +111,6 @@
             this.active = newdetails.productSkuMap[k];
             break;
           }
-          console.log("this.active", this.active);
           this.item = newdetails.productSkus[this.active];
           this.title = newdetails.productAttribute.product_title;
           this.attributes = newdetails.productAttribute.attributes;
@@ -182,7 +181,7 @@
         this.$emit("cancel", e);
       },
       onStepperChange(e) {
-        this.nums = int(e.mp.detail);
+        this.nums = e.mp.detail;
       },
       previewImage() {
         let pics = [];
@@ -226,7 +225,6 @@
           }
         }
         unique = md5(unique);
-        console.log("unique", unique);
         return unique;
       },
       sub(str) {
