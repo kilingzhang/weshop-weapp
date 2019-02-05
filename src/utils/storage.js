@@ -171,5 +171,13 @@ export function getCartsStorage(
 }
 
 export function getCartsStorageSync() {
-  return getStorageSync("carts");;
+  return getStorageSync("carts");
+}
+
+export function setAddressesStorageSync(addresses) {
+  return setStorageSync("addresses", addresses);
+}
+
+export function getAddressesStorageSync() {
+  return getStorageSync("addresses");
 }

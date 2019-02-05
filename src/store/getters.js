@@ -5,6 +5,8 @@ const getters = {
   avatar: state => state.user.info.avatar_url,
   nickname: state => state.user.info.nickname,
   phone: state => state.user.info.phone,
+  addresses: state => state.user.addresses,
+  address: state => state.user.address,
 
   productCategories: state => state.category.productCategories,
   products: state => state.product.products,

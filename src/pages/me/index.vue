@@ -63,7 +63,12 @@
           </van-cell>
         </van-cell-group>
       </div>
-      
+
+      <div style="margin-top:20rpx;" v-if="getters.isAuthorize">
+        <van-cell-group style="margin-top:100rpx;">
+          <van-cell title="我的地址" icon="location" is-link @click="link('/pages/address/main')"/>
+        </van-cell-group>
+      </div>
     </div>
     <div class="footer">
       <image src="/static/imgs/default_avatar.png" class="avatar-img"/>
