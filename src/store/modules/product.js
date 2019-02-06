@@ -1,4 +1,5 @@
 import {
+  getProductById,
   getProductsByCategoryId,
   getQuickProduct,
   getPinterest
@@ -14,6 +15,7 @@ import {
 import Toast from "@vant/toast/toast";
 
 const state = {
+  product: null,
   products: [],
   productsResult: null,
   quickProduct: null,
@@ -26,6 +28,39 @@ const getters = {};
 
 // actions
 const actions = {
+  UpdateProduct({ commit }, payload = {}) {
+    var success = payload["success"];
+    var fail = payload["fail"];
+    var complete = payload["complete"];
+    var productId = payload["productId"];
+
+    getProductById(
+      productId,
+      res => {
+
+        if (res.code !== 0) {
+          //TODO
+          return;
+        }
+
+        const product = res.result;
+
+        if (success) {
+          success(product);
+        }
+
+        commit("UPDATE_PRODUCT", product);
+
+      }, res => {
+        if (fail) {
+          fail(res);
+        }
+      }, res => {
+        if (complete) {
+          complete(res);
+        }
+      });
+  },
   UpdateProducts({ commit }, payload = {}) {
     var success = payload["success"];
     var fail = payload["fail"];
@@ -267,6 +302,9 @@ const mutations = {
   },
   UPDATE_QUICK_PRODUCT(state, quickProduct) {
     state.quickProduct = quickProduct;
+  },
+  UPDATE_PRODUCT(state, product) {
+    state.product = product;
   }
 };
 

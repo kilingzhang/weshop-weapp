@@ -6,6 +6,7 @@
     "pages/me/main",
     "pages/orders/main",
     "pages/address/main",
+    "pages/details/main",
     "pages/error/main"
   ],
   "window": {

@@ -101,3 +101,27 @@ export function getPinterest(
     }
   });
 }
+
+export function getProductById(
+  productId,
+  success,
+  fail = () => {
+  },
+  complete = () => {
+  }) {
+
+  request({
+    uri: "/products/" + productId,
+    method: "get",
+    data: {},
+    success: (res) => {
+      success(res);
+    },
+    fail: (res) => {
+      fail(res);
+    },
+    complete: (res) => {
+      complete(res);
+    }
+  });
+}

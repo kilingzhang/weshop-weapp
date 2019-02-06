@@ -9,6 +9,7 @@ const getters = {
   address: state => state.user.address,
 
   productCategories: state => state.category.productCategories,
+  product: state => state.product.product,
   products: state => state.product.products,
   quickProduct: state => state.product.quickProduct,
   pinterest: state => state.product.pinterest,

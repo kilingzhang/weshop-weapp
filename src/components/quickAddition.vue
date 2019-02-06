@@ -170,7 +170,7 @@
             categoryId: this.details.productAttribute.category_id,
             categoryTitle:this.details.productAttribute.category_title,
           },
-          nums: int(this.nums)
+          nums: this.nums
         };
         this.$emit("add-cart", cart);
       },
