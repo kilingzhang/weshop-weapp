@@ -59,8 +59,8 @@
             </div>
           </div>
           <div class="address-manager-right-icon">
-            <van-icon name="setting" v-if="!address.pivot.is_default"/>
-            <van-icon name="star" v-if="address.pivot.is_default"/>
+            <van-icon name="setting" v-if="!address.is_default"/>
+            <van-icon name="star" v-if="address.is_default"/>
           </div>
         </div>
 
@@ -3923,7 +3923,7 @@
         store.dispatch("GetAddresses");
       },
       setDefaultAddress(item) {
-        if (item.pivot.is_default === 1) {
+        if (item.is_default === 1) {
           toast("success", "当前已经是默认地址啦~");
           return;
         }
