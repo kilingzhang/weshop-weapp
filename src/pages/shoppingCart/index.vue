@@ -46,14 +46,14 @@
       </view>
     </van-submit-bar>
     <van-dialog id="van-dialog"/>
-    <van-toast id="van-toast"/>
+
   </div>
 </template>
 <script>
   import store from "@store";
   import { redirect, forEachValue } from "@utils";
   import Dialog from "@vant/dialog/dialog";
-  import { toast, clearToast } from "@utils/vant";
+  import { toast, clearToast } from "@utils/wx";
 
   export default {
     data() {

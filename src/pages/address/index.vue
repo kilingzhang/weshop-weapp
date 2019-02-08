@@ -73,13 +73,13 @@
         />
       </van-goods-action>
     </div>
-    <van-toast id="van-toast"/>
+    
     <van-dialog id="van-dialog"/>
   </div>
 </template>
 <script>
   import Dialog from "@vant/dialog/dialog";
-  import { clearToast, toast } from "@utils/vant";
+  import { clearToast, toast } from "@utils/wx";
   import store from "@store";
 
   export default {
@@ -3978,10 +3978,12 @@
     },
     //下拉刷新
     async onPullDownRefresh() {
+      toast('loading','loading...',0);
       wx.showNavigationBarLoading(); //在标题栏中显示加载
       this.refreshAddresses(() => {
         wx.hideNavigationBarLoading(); //完成停止加载
         wx.stopPullDownRefresh(); //停止下拉刷新
+        clearToast();
       });
     }
   };

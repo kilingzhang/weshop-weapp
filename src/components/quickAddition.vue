@@ -75,13 +75,13 @@
         </van-goods-action>
       </div>
     </van-action-sheet>
-    <van-toast id="van-toast"/>
+
   </div>
 </template>
 
 <script>
   import * as md5 from "md5";
-  import { toast } from "@utils/vant";
+  import { toast } from "@utils/wx";
 
   export default {
     /**

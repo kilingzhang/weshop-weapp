@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-toast id="van-toast"/>
+
     <quick-addition
       :show="showQuickAddition"
       :details="getters.quickProduct"
@@ -52,7 +52,7 @@
   import quickAddition from "@/components/quickAddition";
   import store from "@store";
   import { redirect } from "@utils";
-  import { toast, clearToast } from "@utils/vant";
+  import { toast, clearToast } from "@utils/wx";
 
   export default {
     store,

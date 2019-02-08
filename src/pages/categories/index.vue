@@ -9,7 +9,7 @@
       @moreItems="moreItems"
       @right-item-add="add"
     ></select-tree>
-    <van-toast id="van-toast"/>
+
     <quick-addition
       :show="showQuickAddition"
       :details="getters.quickProduct"
@@ -25,7 +25,7 @@
   import selectTree from "@/components/selectTree";
   import quickAddition from "@/components/quickAddition";
   import store from "@store";
-  import { toast, clearToast } from "@utils/vant";
+  import { toast, clearToast } from "@utils/wx";
 
   export default {
     store,

@@ -131,7 +131,7 @@
       @getCoupon="getCoupon"
     >
     </coupon-popup>
-    <van-toast id="van-toast"/>
+
   </div>
 </template>
 <script>
@@ -140,7 +140,7 @@
   import { weshopConfigMap } from "@config";
   import store from "@store";
   import { forEachValue, redirect } from "@utils";
-  import { toast, clearToast } from "@utils/vant";
+  import { toast, clearToast } from "@utils/wx";
 
   export default {
     store,

@@ -1,4 +1,4 @@
-import { toast } from "@utils/vant";
+import { toast } from "@utils/wx";
 import {
   getCarts,
   deleteCarts,
