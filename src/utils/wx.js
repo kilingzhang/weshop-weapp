@@ -8,17 +8,21 @@ export function toast(type = "success", message = "success", duration = 500) {
 
   switch (type) {
     case "success":
-      wx.showLoading(options);
+      wx.showToast(options);
       break;
     case "fail":
-      options["icon"] = "success";
-      wx.showLoading(options);
+      options["icon"] = "none";
+      wx.showToast(options);
       break;
     case "loading":
       wx.showLoading({
         title: message,
         mask: true
       });
+      break;
+    default:
+      options["icon"] = "none";
+      wx.showToast(options);
       break;
   }
 
