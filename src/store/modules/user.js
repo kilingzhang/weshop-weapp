@@ -40,6 +40,14 @@ const actions = {
       setTokenStorageSync(token);
     });
   },
+  RefreshToken({ commit }, { code, success }) {
+    getToken(code, data => {
+      const token = data.result.token;
+      commit("UPDATE_TOKEN", token);
+      setTokenStorageSync(token);
+      success();
+    });
+  },
   UpdateToken({ commit }, token) {
     commit("UPDATE_TOKEN", token);
     setTokenStorageSync(token);

@@ -1,6 +1,6 @@
 <template>
   <div class="me">
-    <van-toast id="van-toast"/>
+
     <div class="header">
       <image v-if="canIUse && !getters.isAuthorize" src="/static/imgs/default_avatar.png" class="avatar-img"/>
       <button
@@ -25,21 +25,21 @@
       ></open-data>
     </div>
     <div class="main">
-      <div style="margin-top:30rpx;">
-        <van-cell-group v-if="getters.isAuthorize">
-          <van-cell value="绑定" icon="phone" is-link @click="link('/pages/binging/main')">
-            <view slot="title">
-              <span class="van-cell-text" open-type="getPhoneNumber">绑定手机号、优惠多多</span>
-            </view>
-          </van-cell>
-        </van-cell-group>
+      <div style="margin-top:30rpx;" v-if="getters.isAuthorize">
+        <button
+          class="btn orange"
+          slot="title"
+          @getphonenumber="getphonenumber"
+          open-type="getPhoneNumber"
+        ><span>绑定手机号、优惠多多</span>
+        </button>
       </div>
 
       <div style="margin-top:20rpx;">
         <van-cell-group v-if="getters.isAuthorize">
           <van-cell value="我的订单" is-link @click="link('/pages/orders/main')">
             <view slot="title">
-              <span class="van-cell-text">查看全部订单</span>
+              <span>查看全部订单</span>
             </view>
           </van-cell>
           <van-cell>
@@ -80,9 +80,10 @@
 </template>
 <script>
   import store from "@store";
-  import { authorize } from "@api/user";
+  import { authorize, bindPhone, login } from "@api/user";
   import { redirect } from "@utils";
-  import { toast, clearToast } from "@utils/vant";
+  import { toast, clearToast } from "@utils/wx";
+  import { getTokenStorageSync } from "@utils/storage";
 
   export default {
     store,
@@ -146,6 +147,51 @@
             }
           );
         }
+      },
+      getphonenumber(e) {
+        console.log("getphonenumber:errMsg", e.mp.detail.errMsg);
+        console.log("getphonenumber:iv", e.mp.detail.iv);
+        console.log("getphonenumber:encryptedData", e.mp.detail.encryptedData);
+        const _this = this;
+        const { $store } = this;
+        const success = () => {
+          bindPhone(
+            e.mp.detail.iv,
+            e.mp.detail.encryptedData,
+            data => {
+              console.log("success", data);
+            },
+            res => {
+              console.log("fail", res);
+            },
+            res => {
+              console.log("complete", res);
+            }
+          );
+        };
+        wx.checkSession({
+          success() {
+            console.log("checkSession,success");
+            // session_key 未过期，并且在本生命周期一直有效
+            let token = getTokenStorageSync();
+            if (token) {
+              success();
+            } else {
+              _this.refreshSession(success);
+            }
+          },
+          fail() {
+            console.log("checkSession,fail");
+            _this.refreshSession(success);
+          }
+        });
+      },
+      refreshSession(success) {
+        console.log("refreshSession");
+        const { $store } = this;
+        login(code => {
+          $store.dispatch("RefreshToken", { code, success });
+        });
       }
     },
     created() {
@@ -219,5 +265,26 @@
   .nickname {
     font-size: 30rpx;
     text-align: center;
+  }
+
+  .btn {
+    width: 400rpx !important;
+    font-size: 35rpx !important;
+    background: none !important;
+    color: #000 !important;
+  }
+
+  .btn::after {
+    border: none;
+  }
+
+  .btn.orange {
+    box-shadow: 0 1px 0 1px rgba(255, 102, 43, 0.25), 0 -1px 0 1px rgba(255, 169, 69, 0.25), 1px 0 0 1px rgba(255, 102, 43, 0.25), -1px 0 0 1px rgba(255, 169, 69, 0.25), 1px -1px 0 1px rgba(255, 136, 56, 0.5), -1px 1px 0 1px rgba(255, 136, 56, 0.5), 1px 1px 0 1px rgba(255, 69, 31, 0.75), -1px -1px 0 1px rgba(255, 203, 82, 0.75);
+  }
+
+  .btn.orange span {
+    background: -webkit-linear-gradient(left, #ffcb52, #ff451f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 </style>
