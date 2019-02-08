@@ -55,7 +55,7 @@
               title="购买数量"
             >
               <van-stepper
-                :value="nums"
+                :value="quantity"
                 integer
                 :disabled="details.productSkus[active].stock === 0"
                 min="1"
@@ -93,7 +93,7 @@
         active: 0,
         attributeActives: [],
         title: "",
-        nums: 1,
+        quantity: 1,
         type: 0,
         scrollViewHeight: 500,
         attributes: [],
@@ -107,6 +107,7 @@
           if (newdetails == null) {
             return;
           }
+          this.quantity = 1;
           for (let k of Object.keys(newdetails.productSkuMap)) {
             this.active = newdetails.productSkuMap[k];
             break;
@@ -136,11 +137,11 @@
             id: this.details.productAttribute.product_id,
             name: this.details.productAttribute.product_name,
             title: this.details.productAttribute.product_title,
-            unit:this.details.productAttribute.product_unit,
+            unit: this.details.productAttribute.product_unit,
             categoryId: this.details.productAttribute.category_id,
-            categoryTitle:this.details.productAttribute.category_title,
+            categoryTitle: this.details.productAttribute.category_title
           },
-          nums: this.nums
+          quantity: this.quantity
         };
         this.$emit("confirm", this.type, cart);
       },
@@ -151,11 +152,11 @@
             id: this.details.productAttribute.product_id,
             name: this.details.productAttribute.product_name,
             title: this.details.productAttribute.product_title,
-            unit:this.details.productAttribute.product_unit,
+            unit: this.details.productAttribute.product_unit,
             categoryId: this.details.productAttribute.category_id,
-            categoryTitle:this.details.productAttribute.category_title,
+            categoryTitle: this.details.productAttribute.category_title
           },
-          nums: this.nums
+          quantity: this.quantity
         };
         this.$emit("now-buy", cart);
       },
@@ -166,11 +167,11 @@
             id: this.details.productAttribute.product_id,
             name: this.details.productAttribute.product_name,
             title: this.details.productAttribute.product_title,
-            unit:this.details.productAttribute.product_unit,
+            unit: this.details.productAttribute.product_unit,
             categoryId: this.details.productAttribute.category_id,
-            categoryTitle:this.details.productAttribute.category_title,
+            categoryTitle: this.details.productAttribute.category_title
           },
-          nums: this.nums
+          quantity: this.quantity
         };
         this.$emit("add-cart", cart);
       },
@@ -181,7 +182,7 @@
         this.$emit("cancel", e);
       },
       onStepperChange(e) {
-        this.nums = e.mp.detail;
+        this.quantity = e.mp.detail;
       },
       previewImage() {
         let pics = [];
@@ -197,7 +198,7 @@
         });
       },
       clickSku(attributeIndex, valueIndex) {
-        this.nums = 1;
+        this.quantity = 1;
 
         let unique = this.getUniqueKey(attributeIndex, valueIndex);
 

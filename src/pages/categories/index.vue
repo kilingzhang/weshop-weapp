@@ -25,7 +25,7 @@
   import selectTree from "@/components/selectTree";
   import quickAddition from "@/components/quickAddition";
   import store from "@store";
-  import { toast , clearToast } from "@utils/vant";
+  import { toast, clearToast } from "@utils/vant";
 
   export default {
     store,
@@ -78,18 +78,25 @@
         });
       },
       onAddCart(cart) {
-        if (cart.nums > cart.sku.stock) {
+        if (cart.quantity > cart.sku.stock) {
           toast("fail", "库存不足");
           return;
         }
-        store.dispatch("AddCart", cart);
-        this.closeQuickAddition();
-        toast("success", "添加成功");
+        toast('loading','Loading...',0);
+        store.dispatch("AddCart", {
+          cart,
+          isAuthorize: this.getters.isAuthorize,
+          success:res=>{
+            clearToast();
+            this.closeQuickAddition();
+            toast("success", "添加成功");
+          }
+        });
       },
       /**
        * type 0: 全部显示  1： 购物车  2：立即购买
        */
-      onConfirmQuickAddition(type,cart) {
+      onConfirmQuickAddition(type, cart) {
         if (type === 1) {
           this.onAddCart(cart);
         }

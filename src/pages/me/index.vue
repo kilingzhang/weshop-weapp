@@ -6,6 +6,7 @@
       <button
         v-if="canIUse && !getters.isAuthorize"
         class="nickname logoutNickname"
+        @click="onAuthorize"
         open-type="getUserInfo"
         size="mini"
         @getuserinfo="onGetUserInfo"
@@ -74,13 +75,14 @@
       <image src="/static/imgs/default_avatar.png" class="avatar-img"/>
       <span style="margin-top:10px;">®心意花店</span>
     </div>
+    <van-dialog id="van-dialog"/>
   </div>
 </template>
 <script>
-  import Toast from "@vant/toast/toast";
   import store from "@store";
   import { authorize } from "@api/user";
   import { redirect } from "@utils";
+  import { toast, clearToast } from "@utils/vant";
 
   export default {
     store,
@@ -97,21 +99,19 @@
     methods: {
       link(uri) {
         if (store.getters.isAuthorize === false) {
-          const toast = Toast.fail({
-            duration: 1000,       // 持续展示 toast
-            forbidClick: true, // 禁用背景点击
-            message: "请先授权微信登录~",
-            loadingType: "spinner",
-            selector: "#van-toast"
-          });
+          toast("fail", "请先授权微信登录~", 0);
           return;
         }
         redirect(uri);
       },
+      onAuthorize() {
+        toast("loading", "登陆中..", 0);
+      },
       onGetUserInfo(e) {
         const { $store } = this;
+        clearToast();
         if (e.mp.detail.userInfo === undefined) {
-          Toast.fail("授权失败");
+          toast("fail", "授权失败~");
         } else {
           store.dispatch("UpdateUserInfo", e.mp.detail.userInfo);
           authorize(
@@ -122,10 +122,25 @@
               if (data.code === 0) {
                 $store.dispatch("UpdateUserInfo", data.result);
                 $store.dispatch("UpdateAuthorize", true);
-                Toast.success("授权成功");
+
+                toast("loading", "购物车同步中..", 0);
+                store.dispatch("AddCarts",
+                  {
+                    carts: this.getters.carts,
+                    success: res => {
+                      clearToast();
+                      toast("success", "购物车同步成功~");
+                    },
+                    fail: res => {
+                      clearToast();
+                      toast("fail", "购物车同步失败～");
+                    }
+                  });
+
+
               } else if (data.code === 1) {
                 $store.dispatch("UpdateAuthorize", false);
-                Toast.fail("授权失败,请重新尝试");
+                toast("fail", "授权失败,请重新尝试");
                 console.log("授权失败,请重新尝试", data);
               }
             }
@@ -133,7 +148,8 @@
         }
       }
     },
-    created() {},
+    created() {
+    },
     mounted() {
       var title = "个人中心";
       console.log(title, "mounted");

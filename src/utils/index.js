@@ -45,12 +45,15 @@ export function request(payload) {
           payload["complete"](res);
         }
       } else {
+
         if (payload["fail"]) {
           payload["fail"](res);
         }
+
         if (payload["complete"]) {
           payload["complete"](res);
         }
+
         //TODO 方便调试
         Toast.fail("statusCode:" + res.statusCode);
       }

@@ -210,16 +210,23 @@
         }
       },
       onAddCart(cart) {
-        if (cart.nums > cart.sku.stock) {
+        if (cart.quantity > cart.sku.stock) {
           toast("fail", "库存不足");
           return;
         }
-        store.dispatch("AddCart", cart);
-        this.closeQuickAddition();
-        toast("success", "添加成功");
+        toast('loading','Loading...',0);
+        store.dispatch("AddCart", {
+          cart,
+          isAuthorize: this.getters.isAuthorize,
+          success:res=>{
+            clearToast();
+            this.closeQuickAddition();
+            toast("success", "添加成功");
+          }
+        });
       },
       onNowBuy(cart) {
-        if (cart.nums > cart.sku.stock) {
+        if (cart.quantity > cart.sku.stock) {
           toast("fail", "库存不足");
           return;
         }

@@ -20,7 +20,7 @@
             <van-card
               class="item-details"
               lazy-load
-              :num="cart.nums"
+              :num="cart.quantity"
               :tag="cart.icon_text"
               :price="cart.sku.price"
               :origin-price="cart.sku.original_price"
@@ -29,8 +29,10 @@
               :thumb="cart.sku.pic"
             >
               <view slot="footer">
-                <van-stepper :value="carts[i].nums" :data-id="i" integer min="1" :max="cart.sku.stock" step="1"
-                             @change="onCartNumsChange"/>
+                <van-stepper :value="carts[i].quantity" :data-id="i" integer min="1" :max="cart.sku.stock" step="1"
+                             @minus="onCartNumsMinus"
+                             @plus="onCartNumsPlus"
+                             @blur="onCartNumsBlur"/>
               </view>
             </van-card>
             <van-checkbox checked-color="red" v-if="isDelete" :name="i" class="item-checkbox"></van-checkbox>
@@ -51,7 +53,7 @@
   import store from "@store";
   import { redirect, forEachValue } from "@utils";
   import Dialog from "@vant/dialog/dialog";
-  import Toast from "@vant/toast/toast";
+  import { toast, clearToast } from "@utils/vant";
 
   export default {
     data() {
@@ -59,7 +61,9 @@
         checked: true,
         isDelete: false,
         result: [],
-        priceAmount: 0
+        priceAmount: 0,
+        isBlur: false,
+        isLoading: false
       };
     },
     store,
@@ -74,11 +78,13 @@
     watch: {
       result: {
         handler(n, o) {
-          if(n === null){
+          if (n === null) {
             return;
           }
           this.refreshComputedPriceAmount();
-          if (n.length !== this.carts.length) {
+          if (n.length === this.carts.length) {
+            this.checked = true;
+          } else {
             this.checked = false;
           }
         },
@@ -102,23 +108,17 @@
     methods: {
       submitOrder() {
         if (store.getters.isAuthorize === false) {
-          const toast = Toast.fail({
-            duration: 0,       // 持续展示 toast
-            forbidClick: true, // 禁用背景点击
-            message: "请先授权微信登录~",
-            loadingType: "spinner",
-            selector: "#van-toast"
-          });
+          toast("fail", "请先授权微信登录~", 0);
           setTimeout(() => {
             if (toast !== null) {
               redirect("/pages/me/main", "switchTab");
-              Toast.clear();
+              clearToast();
             }
           }, 2000);
           return;
         }
         if (this.result.length === 0) {
-          Toast.fail("请添加商品后再提交订单~");
+          toast("fail", "请添加商品后再提交订单~");
           return;
         }
         redirect("/pages/orders/confirm/main");
@@ -135,18 +135,62 @@
       onCheckboxChange(event) {
         this.result = event.mp.detail;
       },
-      onCartNumsChange(event) {
-        store.dispatch("UpdateCartNums", {
+      onCartNumsPlus(event) {
+        toast("loading", "资源加载中...", 0);
+        store.dispatch("UpdateCartQuantityPlus", {
+          isAuthorize:this.getters.isAuthorize,
           index: event.currentTarget.dataset.id,
-          nums: event.mp.detail
+          success: res => {
+            this.refreshComputedPriceAmount();
+            clearToast();
+          },
+          fail: res => {
+            clearToast();
+            toast("fail", JSON.stringify(res));
+            wx.startPullDownRefresh();
+          }
         });
-        this.refreshComputedPriceAmount();
+      },
+      onCartNumsMinus(event) {
+        toast("loading", "资源加载中...", 0);
+        store.dispatch("UpdateCartQuantityMinus", {
+          index: event.currentTarget.dataset.id,
+          isAuthorize:this.getters.isAuthorize,
+          success: res => {
+            this.refreshComputedPriceAmount();
+            clearToast();
+          },
+          fail: res => {
+            clearToast();
+            toast("fail", JSON.stringify(res));
+            wx.startPullDownRefresh();
+          }
+        });
+      },
+      onCartNumsBlur(event) {
+        console.log("event", event);
+        toast("loading", "资源加载中...", 0);
+        store.dispatch("UpdateCartQuantity", {
+          index: event.currentTarget.dataset.id,
+          quantity: event.mp.detail.detail.value,
+          isAuthorize:this.getters.isAuthorize,
+          success: res => {
+            this.refreshComputedPriceAmount();
+            clearToast();
+          },
+          fail: res => {
+            clearToast();
+            toast("fail", JSON.stringify(res));
+            wx.startPullDownRefresh();
+          }
+        });
+
       },
       refreshComputedPriceAmount() {
         this.priceAmount = 0;
         forEachValue(this.carts, (cart, index) => {
           if (this.result.indexOf(index + "") !== -1) {
-            this.priceAmount += cart.nums * cart.sku.price;
+            this.priceAmount += cart.quantity * cart.sku.price;
           }
         });
         this.priceAmount *= 100;
@@ -160,9 +204,15 @@
           Dialog.confirm({
             message: "确定全部删除吗？"
           }).then(() => {
-            store.dispatch('RemoveAllCart');
-            Dialog.close();
-            this.isDelete = false;
+            toast("loading", "loading...", 0);
+            store.dispatch("RemoveAllCarts", {
+              isAuthorize:this.getters.isAuthorize,
+              success: res => {
+                clearToast();
+                Dialog.close();
+                this.isDelete = false;
+              }
+            });
           }).catch(() => {
             Dialog.close();
           });
@@ -170,10 +220,15 @@
           Dialog.confirm({
             message: "确定删除吗？"
           }).then(() => {
-            forEachValue(this.result, (index, i) => {
-              store.dispatch("RemoveCart", this.carts[i]);
+            toast("loading", "Loading...", 0);
+            store.dispatch("RemoveCarts", {
+              isAuthorize:this.getters.isAuthorize,
+              indexs: this.result,
+              success: res => {
+                clearToast();
+                Dialog.close();
+              }
             });
-            Dialog.close();
           }).catch(() => {
             Dialog.close();
           });
@@ -181,7 +236,7 @@
       },
       openDelete() {
         if (this.carts.length === 0) {
-          Toast.fail("请添加商品！");
+          toast("fail", "请添加商品！");
           this.isDelete = false;
           return;
         }
@@ -189,6 +244,7 @@
       }
     },
     created() {
+
     },
     mounted() {
       var title = "购物车";
@@ -203,14 +259,29 @@
         }
       }
       this.refreshComputedPriceAmount();
+      wx.startPullDownRefresh();
+
     },
     //下拉刷新
     async onPullDownRefresh() {
+      toast("loading", "资源加载中...", 0);
+
       wx.showNavigationBarLoading(); //在标题栏中显示加载
-      store.dispatch("UpdateCarts");
-      this.refreshComputedPriceAmount();
-      wx.hideNavigationBarLoading(); //完成停止加载
-      wx.stopPullDownRefresh(); //停止下拉刷新
+      store.dispatch("UpdateCarts", {
+        isAuthorize:this.getters.isAuthorize,
+        success: res => {
+          this.refreshComputedPriceAmount();
+        },
+        fail: res => {
+          toast("fail", "Sorry, you are not authorized to access this page.");
+        },
+        complete: res => {
+          clearToast();
+          wx.hideNavigationBarLoading(); //完成停止加载
+          wx.stopPullDownRefresh(); //停止下拉刷新
+        }
+      });
+
     },
     onShow() {
       this.isDelete = false;
