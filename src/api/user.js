@@ -1,5 +1,5 @@
 import { request } from "@utils";
-import Toast from "@vant/toast/toast";
+import { toast } from "@utils/wx";
 
 export function getToken(
   code,
@@ -60,7 +60,7 @@ export function login(
         // 发起网络请求
         success(res.code);
       } else {
-        Toast.fail("登陆失败：" + res.errMsg);
+        toast("fail", "登陆失败：" + res.errMsg);
         login(success, fail, complete);
       }
     },
@@ -83,12 +83,41 @@ export function authorize(
   },
   complete = () => {
   }) {
-  console.log("token:", iv, "       ", encryptedData);
+  console.log("authorize:token:", iv, "       ", encryptedData);
   request({
     uri: "/account/authorize",
     method: "post",
     data: {
       token: token,
+      iv: iv,
+      encryptedData: encryptedData
+    },
+    success(res) {
+      success(res);
+    },
+    fail(res) {
+      fail(res);
+    },
+    complete(res) {
+      complete(res);
+    }
+  });
+}
+
+
+export function bindPhone(
+  iv,
+  encryptedData,
+  success,
+  fail = () => {
+  },
+  complete = () => {
+  }) {
+  console.log("bindphone:", iv, "       ", encryptedData);
+  request({
+    uri: "/account/phone",
+    method: "put",
+    data: {
       iv: iv,
       encryptedData: encryptedData
     },

@@ -1,7 +1,6 @@
 import { requestConfigMap } from "@config";
 import { getTokenStorageSync } from "@utils/storage";
-
-import Toast from "@vant/toast/toast";
+import { toast } from "@utils/wx";
 
 /**
  * @type {{fail: fail, methods: string, success: success, params: {}, uri: string}}
@@ -27,11 +26,11 @@ export function request(payload) {
 
         if (res.data.code === 404) {
 
-          Toast.fail("资源不存在");
+          toast("fail", "资源不存在");
 
         } else if (res.data.code === 400) {
           // 参数不合法
-          Toast.fail(res.data.message);
+          toast("fail", res.data.message);
 
         } else {
 
@@ -55,7 +54,7 @@ export function request(payload) {
         }
 
         //TODO 方便调试
-        Toast.fail("statusCode:" + res.statusCode);
+        toast("fail", "statusCode:" + res.statusCode);
       }
     },
     fail(res) {

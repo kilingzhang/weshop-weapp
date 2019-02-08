@@ -138,7 +138,7 @@
       onCartNumsPlus(event) {
         toast("loading", "资源加载中...", 0);
         store.dispatch("UpdateCartQuantityPlus", {
-          isAuthorize:this.getters.isAuthorize,
+          isAuthorize: this.getters.isAuthorize,
           index: event.currentTarget.dataset.id,
           success: res => {
             this.refreshComputedPriceAmount();
@@ -155,7 +155,7 @@
         toast("loading", "资源加载中...", 0);
         store.dispatch("UpdateCartQuantityMinus", {
           index: event.currentTarget.dataset.id,
-          isAuthorize:this.getters.isAuthorize,
+          isAuthorize: this.getters.isAuthorize,
           success: res => {
             this.refreshComputedPriceAmount();
             clearToast();
@@ -173,7 +173,7 @@
         store.dispatch("UpdateCartQuantity", {
           index: event.currentTarget.dataset.id,
           quantity: event.mp.detail.detail.value,
-          isAuthorize:this.getters.isAuthorize,
+          isAuthorize: this.getters.isAuthorize,
           success: res => {
             this.refreshComputedPriceAmount();
             clearToast();
@@ -197,7 +197,7 @@
       },
       remove() {
         if (this.result.length === 0) {
-          Toast.fail("请选择需要删除的商品！");
+          toast("fail", "请选择需要删除的商品！");
           return;
         }
         if (this.result.length === this.carts.length) {
@@ -206,7 +206,7 @@
           }).then(() => {
             toast("loading", "loading...", 0);
             store.dispatch("RemoveAllCarts", {
-              isAuthorize:this.getters.isAuthorize,
+              isAuthorize: this.getters.isAuthorize,
               success: res => {
                 clearToast();
                 Dialog.close();
@@ -222,7 +222,7 @@
           }).then(() => {
             toast("loading", "Loading...", 0);
             store.dispatch("RemoveCarts", {
-              isAuthorize:this.getters.isAuthorize,
+              isAuthorize: this.getters.isAuthorize,
               indexs: this.result,
               success: res => {
                 clearToast();
@@ -268,7 +268,7 @@
 
       wx.showNavigationBarLoading(); //在标题栏中显示加载
       store.dispatch("UpdateCarts", {
-        isAuthorize:this.getters.isAuthorize,
+        isAuthorize: this.getters.isAuthorize,
         success: res => {
           this.refreshComputedPriceAmount();
         },

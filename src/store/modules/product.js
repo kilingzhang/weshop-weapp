@@ -12,7 +12,7 @@ import {
   getPinterestStorage,
   clearPinterestStorageSync
 } from "@utils/storage";
-import Toast from "@vant/toast/toast";
+import { toast } from "@utils/wx";
 
 const state = {
   product: null,
@@ -104,7 +104,7 @@ const actions = {
     payload["limit"] = state.productsResult.per_page;
 
     if (state.productsResult.last_page < payload["page"]) {
-      Toast.success("我是有底线滴～");
+      toast("success", "我是有底线滴～");
       if (success) {
         success();
       }
@@ -240,7 +240,7 @@ const actions = {
     payload["limit"] = state.pinterestResult.per_page;
 
     if (state.pinterestResult.last_page < payload["page"]) {
-      Toast.success("我是有底线滴～");
+      toast("success", "我是有底线滴～");
       if (success) {
         success();
       }
