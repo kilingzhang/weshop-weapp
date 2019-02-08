@@ -166,11 +166,13 @@
             },
             res => {
               console.log("complete", res);
+              clearToast();
             }
           );
         };
         wx.checkSession({
           success() {
+            toast("loading", "loading...",0);
             console.log("checkSession,success");
             // session_key 未过期，并且在本生命周期一直有效
             let token = getTokenStorageSync();
@@ -181,6 +183,7 @@
             }
           },
           fail() {
+            toast("loading", "loading...",0);
             console.log("checkSession,fail");
             _this.refreshSession(success);
           }
