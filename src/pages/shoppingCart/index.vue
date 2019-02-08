@@ -108,13 +108,13 @@
     methods: {
       submitOrder() {
         if (store.getters.isAuthorize === false) {
-          toast("fail", "请先授权微信登录~", 0);
-          setTimeout(() => {
-            if (toast !== null) {
-              redirect("/pages/me/main", "switchTab");
-              clearToast();
-            }
-          }, 2000);
+          Dialog.confirm({
+            message: "请先微信授权登陆后下单！"
+          }).then(() => {
+            redirect("/pages/me/main", "switchTab");
+          }).catch(() => {
+            Dialog.close();
+          });
           return;
         }
         if (this.result.length === 0) {
