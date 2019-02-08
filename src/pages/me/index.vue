@@ -152,6 +152,10 @@
         console.log("getphonenumber:errMsg", e.mp.detail.errMsg);
         console.log("getphonenumber:iv", e.mp.detail.iv);
         console.log("getphonenumber:encryptedData", e.mp.detail.encryptedData);
+        if (e.mp.detail.iv === undefined || e.mp.detail.encryptedData === undefined) {
+          toast("fail", "绑定失败，请重试～");
+          return;
+        }
         const _this = this;
         const { $store } = this;
         const success = () => {
@@ -172,7 +176,7 @@
         };
         wx.checkSession({
           success() {
-            toast("loading", "loading...",0);
+            toast("loading", "loading...", 0);
             console.log("checkSession,success");
             // session_key 未过期，并且在本生命周期一直有效
             let token = getTokenStorageSync();
@@ -183,7 +187,7 @@
             }
           },
           fail() {
-            toast("loading", "loading...",0);
+            toast("loading", "loading...", 0);
             console.log("checkSession,fail");
             _this.refreshSession(success);
           }
