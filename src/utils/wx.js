@@ -11,6 +11,7 @@ export function toast(type = "success", message = "success", duration = 500) {
       wx.showLoading(options);
       break;
     case "fail":
+      options["icon"] = "success";
       wx.showLoading(options);
       break;
     case "loading":
