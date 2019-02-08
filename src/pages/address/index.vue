@@ -3907,14 +3907,13 @@
               name: this.username
             },
             success: res => {
+              clearToast();
               toast("success", "添加成功");
               this.phone = "";
               this.username = "";
               this.addressDetail = "";
               this.address = 210902;
-            }, complete: res => {
               this.closeAddAddress();
-              clearToast();
               wx.startPullDownRefresh();
             }
           });

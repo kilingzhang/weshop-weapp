@@ -105,7 +105,7 @@ const actions = {
       res => {
 
         if (success) {
-          success();
+          success(res);
         }
 
       }, res => {
