@@ -101,16 +101,6 @@ const actions = {
 
   },
   AddCarts({ commit }, { carts, success, fail, complete }) {
-    if (carts.length === 0) {
-      if (success) {
-        success();
-      }
-      if (complete) {
-        complete();
-      }
-      return;
-    }
-
     const cartsData = [];
     forEachValue(carts, (cart, index) => {
       cartsData.push({
