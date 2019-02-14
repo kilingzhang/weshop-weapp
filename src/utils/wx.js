@@ -1,4 +1,4 @@
-export function toast(type = "success", message = "success", duration = 500) {
+export function toast(type = "success", message = "success", duration = 1000) {
   const options = {
     duration: duration,       // 持续展示 toast
     mask: true, // 禁用背景点击
