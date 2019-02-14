@@ -5,6 +5,7 @@
     "pages/shoppingCart/main",
     "pages/me/main",
     "pages/orders/main",
+    "pages/orders/confirm/main",
     "pages/address/main",
     "pages/details/main",
     "pages/error/main"

@@ -7,6 +7,7 @@ import user from "@modules/user";
 import category from "@modules/category";
 import product from "@modules/product";
 import cart from "@modules/cart";
+import order from "@modules/order";
 import getters from '@store/getters'
 
 Vue.use(Vuex);
@@ -23,7 +24,8 @@ export default new Vuex.Store({
     user,
     category,
     product,
-    cart
+    cart,
+    order,
   },
   state: {
 

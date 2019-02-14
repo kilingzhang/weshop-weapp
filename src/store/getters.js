@@ -16,6 +16,7 @@ const getters = {
 
 
   carts: state => state.cart.carts,
+  orderinfo: state => state.order.orderinfo,
 
 
   banners: state => state.advertise.banners,
